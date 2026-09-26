@@ -1,8 +1,10 @@
 package com.Medicare.carehub_api.controller;
 
-
-import com.Medicare.carehub_api.entity.Appointment;
+import com.Medicare.carehub_api.dto.AppointmentDTO;
+import com.Medicare.carehub_api.dto.AppointmentRequestDTO;
+import com.Medicare.carehub_api.dto.PatientDTO;
 import com.Medicare.carehub_api.service.AppointmentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,35 +16,42 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(
+            AppointmentService appointmentService) {
+
         this.appointmentService = appointmentService;
     }
 
     @PostMapping
-    public Appointment createAppointment(@RequestBody Appointment appointment) {
-        return appointmentService.saveAppointment(appointment);
+    public AppointmentDTO createAppointment(
+            @Valid @RequestBody AppointmentRequestDTO dto) {
+
+        return appointmentService.saveAppointment(dto);
     }
 
     @GetMapping
-    public List<Appointment> getAllAppointments() {
+    public List<AppointmentDTO> getAllAppointments() {
+
         return appointmentService.getAllAppointments();
     }
 
     @GetMapping("/{id}")
-    public Optional<Appointment> getAppointmentById(@PathVariable Long id) {
+    public AppointmentDTO getAppointmentById(@PathVariable Long id) {
+
         return appointmentService.getAppointmentById(id);
+    }
+
+    @PutMapping("/{id}")
+    public AppointmentDTO updateAppointment(
+            @PathVariable Long id,
+            @Valid @RequestBody AppointmentRequestDTO dto) {
+
+        return appointmentService.updateAppointment(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteAppointment(@PathVariable Long id) {
+
         appointmentService.deleteAppointment(id);
-    }
-
-    @PutMapping("/{id}")
-    public Appointment updateAppointment(
-            @PathVariable Long id,
-            @RequestBody Appointment appointment) {
-
-        return appointmentService.updateAppointment(id, appointment);
     }
 }

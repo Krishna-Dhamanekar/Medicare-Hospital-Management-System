@@ -1,12 +1,15 @@
 package com.Medicare.carehub_api.controller;
 
 
-import com.Medicare.carehub_api.entity.Doctor;
+import com.Medicare.carehub_api.dto.DoctorDTO;
+import com.Medicare.carehub_api.dto.DoctorRequestDTO;
+
 import com.Medicare.carehub_api.service.DoctorService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/doctors")
@@ -21,27 +24,27 @@ public class DoctorController
     }
 
     @PostMapping
-    public Doctor createDoctor(@RequestBody Doctor doctor)
-    {
-        return doctorService.saveDoctor(doctor);
+    public DoctorDTO createDoctor(@Valid @RequestBody DoctorRequestDTO dto) {
+        return doctorService.saveDoctor(dto);
     }
 
     @GetMapping
-    public List<Doctor> getAllDOctors()
-    {
+    public List<DoctorDTO> getAllDoctors() {
         return doctorService.getAllDoctors();
     }
 
     @GetMapping("/{id}")
-    public Optional<Doctor> getDoctorById(@PathVariable Long id)
+    public DoctorDTO getDoctorById(@PathVariable Long id)
     {
         return doctorService.getDoctorById(id);
     }
 
     @PutMapping("/{id}")
-    public Doctor updateDoctor(@PathVariable Long id,@RequestBody Doctor doctor)
+    public DoctorDTO updateDoctor(
+            @PathVariable Long id,
+            @Valid @RequestBody DoctorRequestDTO dto)
     {
-        return doctorService.updateDoctor(id,doctor);
+        return doctorService.updateDoctor(id, dto);
     }
 
     @DeleteMapping("/{id}")

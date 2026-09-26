@@ -1,11 +1,13 @@
 package com.Medicare.carehub_api.service;
-
+import com.Medicare.carehub_api.dto.DoctorDTO;
+import com.Medicare.carehub_api.dto.DoctorRequestDTO;
 import com.Medicare.carehub_api.entity.Doctor;
+import com.Medicare.carehub_api.exception.ResourceNotFoundException;
 import com.Medicare.carehub_api.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class DoctorService {
@@ -16,36 +18,75 @@ public class DoctorService {
     {
         this.doctorRepository=doctorRepository;
     }
+    public DoctorDTO saveDoctor(DoctorRequestDTO dto) {
 
-    public Doctor saveDoctor(Doctor doctor)
-    {
-        return doctorRepository.save(doctor);
+        Doctor doctor = new Doctor();
+
+        doctor.setName(dto.getName());
+        doctor.setSpecialization(dto.getSpecialization());
+        doctor.setEmail(dto.getEmail());
+        doctor.setPhone(dto.getPhone());
+
+        Doctor savedDoctor = doctorRepository.save(doctor);
+
+        return convertToDTO(savedDoctor);
     }
 
-    public List<Doctor> getAllDoctors()
-    {
-        return doctorRepository.findAll();
+    public List<DoctorDTO> getAllDoctors() {
+
+        List<Doctor> doctors = doctorRepository.findAll();
+
+        return doctors.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    public Optional<Doctor> getDoctorById(Long id)
-    {
-        return doctorRepository.findById(id);
+    public DoctorDTO getDoctorById(Long id) {
+
+        Doctor doctor = doctorRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Doctor not found with id: " + id));
+
+        return convertToDTO(doctor);
+    }
+    public DoctorDTO convertToDTO(Doctor doctor) {
+
+        DoctorDTO dto = new DoctorDTO();
+
+        dto.setId(doctor.getId());
+        dto.setName(doctor.getName());
+        dto.setSpecialization(doctor.getSpecialization());
+        dto.setEmail(doctor.getEmail());
+        dto.setPhone(doctor.getPhone());
+
+        return dto;
     }
 
-    public Doctor updateDoctor(Long id,Doctor doctor)
-    {
-        Doctor existingDoctor = doctorRepository.findById(id).orElseThrow();
+    public DoctorDTO updateDoctor(Long id, DoctorRequestDTO dto) {
 
-        existingDoctor.setName(doctor.getName());
-        existingDoctor.setSpecialization(doctor.getSpecialization());
-        existingDoctor.setEmail(doctor.getEmail());
-        existingDoctor.setPhone(doctor.getPhone());
+        Doctor existingDoctor =
+                doctorRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Doctor not found with id: " + id));
 
-        return doctorRepository.save(existingDoctor);
+        existingDoctor.setName(dto.getName());
+        existingDoctor.setSpecialization(dto.getSpecialization());
+        existingDoctor.setEmail(dto.getEmail());
+        existingDoctor.setPhone(dto.getPhone());
+
+        Doctor updatedDoctor = doctorRepository.save(existingDoctor);
+
+        return convertToDTO(updatedDoctor);
     }
 
     public void deleteDoctor(Long id)
     {
+        if(!doctorRepository.existsById(id))
+        {
+            throw new ResourceNotFoundException("Doctor not found with id: " + id);
+        }
         doctorRepository.deleteById(id);
     }
 
