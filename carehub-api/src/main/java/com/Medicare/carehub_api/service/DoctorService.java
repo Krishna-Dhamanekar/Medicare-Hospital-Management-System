@@ -90,4 +90,21 @@ public class DoctorService {
         doctorRepository.deleteById(id);
     }
 
+    public List<DoctorDTO> searchDoctorsByName(String name) {
+        List<Doctor> doctors =
+                doctorRepository.findByNameContainingIgnoreCase(name);
+
+        return doctors.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public List<DoctorDTO> searchDoctorsBySpecialization(String specialization) {
+        List<Doctor> doctors =
+                doctorRepository.findBySpecializationContainingIgnoreCase(specialization);
+
+        return doctors.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
 }

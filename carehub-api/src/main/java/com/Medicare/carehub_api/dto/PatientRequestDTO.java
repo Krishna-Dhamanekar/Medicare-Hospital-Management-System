@@ -2,18 +2,25 @@ package com.Medicare.carehub_api.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
 public class PatientRequestDTO
 {
+    @Schema(description = "Patient's full name")
     @NotBlank(message = "Name is Required !")
     private String name;
 
+    @Schema(description = "Patient's phone number")
     @NotBlank(message = "Email is Required !")
     @Email(message = "Enter a valid Email !")
     private  String email;
 
+    @Schema(description = "Patient's phone number")
     @NotBlank(message = "Phone is Required !")
     private  String phone;
 
+    @Schema(description = "Patient's age")
     @Min(value = 1,message = "Age must be at least 1")
     private int age;
 

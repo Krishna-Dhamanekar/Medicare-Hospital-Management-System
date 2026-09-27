@@ -9,10 +9,13 @@ import com.Medicare.carehub_api.exception.ResourceNotFoundException;
 import com.Medicare.carehub_api.repository.AppointmentRepository;
 import com.Medicare.carehub_api.repository.DoctorRepository;
 import com.Medicare.carehub_api.repository.PatientRepository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class AppointmentService {
@@ -143,5 +146,23 @@ public class AppointmentService {
                     "Appointment not found with id: " + id);
         }
         appointmentRepository.deleteById(id);
+    }
+
+    public Page<AppointmentDTO> getAppointmentsByPatientId(
+            Long patientId, Pageable pageable) {
+
+        Page<Appointment> appointments =
+                appointmentRepository.findByPatientId(patientId, pageable);
+
+        return appointments.map(this::convertToDTO);
+    }
+
+    public Page<AppointmentDTO> getAppointmentsByDoctorId(
+            Long doctorId, Pageable pageable) {
+
+        Page<Appointment> appointments =
+                appointmentRepository.findByDoctorId(doctorId, pageable);
+
+        return appointments.map(this::convertToDTO);
     }
 }

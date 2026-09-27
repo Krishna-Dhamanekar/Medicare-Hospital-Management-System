@@ -1,6 +1,9 @@
 package com.Medicare.carehub_api.entity;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
 import jakarta.persistence.*;
+
+
 
 @Entity
 public class Appointment
@@ -9,8 +12,8 @@ public class Appointment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String appointmentDate;
-    private String appointmentTime;
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
     private String reason;
 
     public Long getId() {
@@ -21,22 +24,21 @@ public class Appointment
         this.id = id;
     }
 
-    public String getAppointmentDate() {
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(String appointmentDate) {
+    public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public String getAppointmentTime() {
+    public LocalTime getAppointmentTime() {
         return appointmentTime;
     }
 
-    public void setAppointmentTime(String appointmentTime) {
+    public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
-
     public String getReason() {
         return reason;
     }

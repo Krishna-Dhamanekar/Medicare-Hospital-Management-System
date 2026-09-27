@@ -5,6 +5,8 @@ import com.Medicare.carehub_api.dto.PatientRequestDTO;
 import com.Medicare.carehub_api.entity.Patient;
 import com.Medicare.carehub_api.exception.ResourceNotFoundException;
 import com.Medicare.carehub_api.repository.PatientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,13 +37,11 @@ public class PatientService
         return convertToDTO(savedPatient);
     }
 
-    public List<PatientDTO> getAllPatients() {
+    public Page<PatientDTO> getAllPatients(Pageable pageable) {
 
-        List<Patient> patients = patientRepository.findAll();
+        Page<Patient> patients = patientRepository.findAll(pageable);
 
-        return patients.stream()
-                .map(this::convertToDTO)
-                .toList();
+        return patients.map(this::convertToDTO);
     }
 
     public PatientDTO getPatientById(Long id) {
@@ -91,4 +91,20 @@ public class PatientService
 
          return dto;
      }
+
+    public Page<PatientDTO> searchPatientsByName(String name, Pageable pageable) {
+        Page<Patient> patients =
+                patientRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return patients.map(this::convertToDTO);
+    }
+
+    public List<PatientDTO> searchPatientsByEmail(String email) {
+        List<Patient> patients =
+                patientRepository.findByEmail(email);
+
+        return patients.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
 }

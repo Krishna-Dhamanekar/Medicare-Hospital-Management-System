@@ -1,20 +1,25 @@
 package com.Medicare.carehub_api.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class DoctorRequestDTO {
 
 
+    @Schema(description = "Doctor's full name")
     @NotBlank(message = "Name is required")
     private String name;
 
+    @Schema(description = "Doctor's medical specialization")
     @NotBlank(message = "Specialization is required")
     private String specialization;
 
+    @Schema(description = "Doctor's email address")
     @NotBlank(message = "Email is required")
     @Email(message = "Enter a valid email")
     private String email;
 
+    @Schema(description = "Doctor's phone number")
     @NotBlank(message = "Phone is required")
     private String phone;
     public String getName() {

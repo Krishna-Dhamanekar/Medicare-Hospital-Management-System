@@ -1,13 +1,17 @@
 package com.Medicare.carehub_api.dto;
 
-public class AppointmentDTO
-{
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class AppointmentDTO {
+
     private Long id;
-    private String appointmentDate;
-    private String appointmentTime;
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
     private String reason;
     private Long patientId;
     private Long doctorId;
+
 
     public Long getId() {
         return id;
@@ -17,21 +21,24 @@ public class AppointmentDTO
         this.id = id;
     }
 
-    public String getAppointmentDate() {
+
+    public LocalDate getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(String appointmentDate) {
+    public void setAppointmentDate(LocalDate appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 
-    public String getAppointmentTime() {
+
+    public LocalTime getAppointmentTime() {
         return appointmentTime;
     }
 
-    public void setAppointmentTime(String appointmentTime) {
+    public void setAppointmentTime(LocalTime appointmentTime) {
         this.appointmentTime = appointmentTime;
     }
+
 
     public String getReason() {
         return reason;
@@ -41,13 +48,6 @@ public class AppointmentDTO
         this.reason = reason;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
-    }
 
     public Long getPatientId() {
         return patientId;
@@ -56,5 +56,13 @@ public class AppointmentDTO
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
-}
 
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Long doctorId) {
+        this.doctorId = doctorId;
+    }
+}
