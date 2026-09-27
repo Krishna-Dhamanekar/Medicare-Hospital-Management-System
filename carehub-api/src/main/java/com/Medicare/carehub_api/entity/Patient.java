@@ -1,9 +1,6 @@
 package com.Medicare.carehub_api.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Patient
@@ -12,9 +9,16 @@ public class Patient
       @GeneratedValue(strategy = GenerationType.IDENTITY)
       @Id
       private Long id;
+
+      @Column(nullable = false)
       private String name;
+
+      @Column(nullable = false, unique = true)
       private String email;
 
+      @Column(nullable = false)
+      private String phone;
+      private int age;
       public Long getId() {
             return id;
       }
@@ -55,6 +59,6 @@ public class Patient
             this.age = age;
       }
 
-      private String phone;
-      private int age;
+
+
 }

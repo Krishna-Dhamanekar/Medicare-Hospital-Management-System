@@ -5,6 +5,7 @@ import com.Medicare.carehub_api.dto.AppointmentRequestDTO;
 import com.Medicare.carehub_api.entity.Appointment;
 import com.Medicare.carehub_api.entity.Doctor;
 import com.Medicare.carehub_api.entity.Patient;
+import com.Medicare.carehub_api.exception.ConflictException;
 import com.Medicare.carehub_api.exception.ResourceNotFoundException;
 import com.Medicare.carehub_api.repository.AppointmentRepository;
 import com.Medicare.carehub_api.repository.DoctorRepository;
@@ -15,14 +16,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class AppointmentService {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(AppointmentService.class);
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
+
+
+
 
     public AppointmentService(
             AppointmentRepository appointmentRepository,
@@ -35,8 +42,11 @@ public class AppointmentService {
     }
 
     // CREATE
+    @Transactional
     public AppointmentDTO saveAppointment(AppointmentRequestDTO dto) {
 
+        logger.info("Creating appointment for patientId={} and doctorId={}",
+                dto.getPatientId(), dto.getDoctorId());
         Patient patient = patientRepository.findById(dto.getPatientId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
@@ -47,6 +57,18 @@ public class AppointmentService {
                         new ResourceNotFoundException(
                                 "Doctor not found with id: " + dto.getDoctorId()));
 
+        boolean conflict =
+                appointmentRepository.existsByDoctorIdAndAppointmentDateAndAppointmentTime(
+                        dto.getDoctorId(),
+                        dto.getAppointmentDate(),
+                        dto.getAppointmentTime()
+                );
+
+        if (conflict) {
+            throw new ConflictException(
+                    "Doctor already has an appointment at this date and time"
+            );
+        }
         Appointment appointment = new Appointment();
 
         appointment.setAppointmentDate(dto.getAppointmentDate());
@@ -57,7 +79,8 @@ public class AppointmentService {
 
         Appointment savedAppointment =
                 appointmentRepository.save(appointment);
-
+        logger.info("Appointment created successfully with id={}",
+                savedAppointment.getId());
         return convertToDTO(savedAppointment);
     }
 
@@ -100,9 +123,11 @@ public class AppointmentService {
     }
 
     // UPDATE
+    @Transactional
     public AppointmentDTO updateAppointment(
             Long id,
             AppointmentRequestDTO dto) {
+        logger.info("Updating appointment with id={}", id);
 
         Appointment existingAppointment =
                 appointmentRepository.findById(id)
@@ -140,6 +165,7 @@ public class AppointmentService {
 
     // DELETE
     public void deleteAppointment(Long id) {
+        logger.info("Deleting appointment with id={}", id);
 
         if (!appointmentRepository.existsById(id)) {
             throw new ResourceNotFoundException(
@@ -165,4 +191,6 @@ public class AppointmentService {
 
         return appointments.map(this::convertToDTO);
     }
+
+
 }

@@ -12,8 +12,13 @@ public class Appointment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private LocalDate appointmentDate;
+
+    @Column(nullable = false)
     private LocalTime appointmentTime;
+
+    @Column(nullable = false)
     private String reason;
 
     public Long getId() {

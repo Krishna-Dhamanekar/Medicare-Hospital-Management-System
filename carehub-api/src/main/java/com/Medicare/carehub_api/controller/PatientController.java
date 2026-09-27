@@ -1,4 +1,5 @@
 package com.Medicare.carehub_api.controller;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
+@Tag(name = "Patients", description = "Patient management APIs")
 @RestController
 @RequestMapping("/patients")
 public class PatientController {
