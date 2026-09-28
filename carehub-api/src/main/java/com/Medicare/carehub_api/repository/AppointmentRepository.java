@@ -13,16 +13,18 @@ import java.util.List;
 
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+
+    Page<Appointment> findByPatientId(Long patientId, Pageable pageable);
 
     Page<Appointment> findByDoctorId(Long doctorId, Pageable pageable);
+
     List<Appointment> findByAppointmentDate(LocalDate appointmentDate);
-    Page<Appointment> findByPatientId(Long patientId, Pageable pageable);
 
     boolean existsByDoctorIdAndAppointmentDateAndAppointmentTime(
             Long doctorId,
             LocalDate appointmentDate,
             LocalTime appointmentTime);
 
-
+    boolean existsByPatientId(Long patientId);
 }

@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 @Entity
 public class Patient
 {
-
       @GeneratedValue(strategy = GenerationType.IDENTITY)
       @Id
       private Long id;

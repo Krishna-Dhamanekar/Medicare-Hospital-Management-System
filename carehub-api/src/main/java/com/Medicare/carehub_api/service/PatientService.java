@@ -3,7 +3,9 @@ package com.Medicare.carehub_api.service;
 import com.Medicare.carehub_api.dto.PatientDTO;
 import com.Medicare.carehub_api.dto.PatientRequestDTO;
 import com.Medicare.carehub_api.entity.Patient;
+import com.Medicare.carehub_api.exception.ConflictException;
 import com.Medicare.carehub_api.exception.ResourceNotFoundException;
+import com.Medicare.carehub_api.repository.AppointmentRepository;
 import com.Medicare.carehub_api.repository.PatientRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +19,13 @@ public class PatientService
 {
 
     private final PatientRepository patientRepository;
+    private final AppointmentRepository appointmentRepository;
+    public PatientService(
+            PatientRepository patientRepository,
+            AppointmentRepository appointmentRepository) {
 
-    public PatientService(PatientRepository patientRepository)
-    {
-        this.patientRepository=patientRepository;
+        this.patientRepository = patientRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public PatientDTO savePatient(PatientRequestDTO dto) {
@@ -70,15 +75,24 @@ public class PatientService
 
         return convertToDTO(updatedPatient);
     }
-    public void deletePatient(Long id)
-    {
-        if (!patientRepository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Patient not found with id: " + id);
-        }
-        patientRepository.deleteById(id);
-    }
+    public void deletePatient(Long id) {
 
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Patient not found with id: " + id));
+
+        boolean hasAppointments =
+                appointmentRepository.existsByPatientId(id);
+
+        if (hasAppointments) {
+            throw new ConflictException(
+                    "Cannot delete patient because they have existing appointments"
+            );
+        }
+
+        patientRepository.delete(patient);
+    }
      public PatientDTO convertToDTO(Patient patient)
      {
          PatientDTO dto=new PatientDTO();
