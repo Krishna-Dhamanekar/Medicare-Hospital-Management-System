@@ -705,3 +705,794 @@ body {
     overflow-x: auto;
   }
 }
+
+.admin-badge {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #e0ecff;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+}
+
+.dashboard-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-3px);
+}
+
+.dashboard-card-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #e0ecff;
+  color: #2563eb;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dashboard-card h3 {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.dashboard-card p {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.quick-actions {
+  margin-top: 35px;
+}
+
+.quick-actions h2 {
+  margin-bottom: 18px;
+  font-size: 21px;
+}
+
+.quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.quick-action-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px;
+  background: white;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #111827;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quick-action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.quick-action-card strong {
+  font-size: 16px;
+}
+
+.quick-action-card span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+@media (max-width: 900px) {
+
+  .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .quick-action-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .dashboard-header {
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+   .app-layout {
+     min-height: 100vh;
+     display: flex;
+     flex-direction: row;
+     background: #f4f7fb;
+   }
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  flex-shrink: 0;
+  background: #111827;
+  padding: 25px 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  padding: 10px 15px 30px;
+  color: white;
+}
+
+.sidebar-logo h2 {
+  margin-bottom: 5px;
+}
+
+.sidebar-logo p {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-link {
+  padding: 12px 15px;
+  border-radius: 7px;
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #2563eb;
+  color: white;
+}
+
+.logout-button {
+  margin-top: auto;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 7px;
+  background: #dc2626;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #b91c1c;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* =========================================
+   CAREHUB PUBLIC HOME PAGE
+========================================= */
+
+.home-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #111827;
+}
+
+
+/* Navbar */
+
+.home-navbar {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.home-logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-logo h2 {
+  margin: 0;
+  color: #2563eb;
+  font-size: 25px;
+}
+
+.home-logo span {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+
+/* Login button */
+
+.home-login-button {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home-login-button:hover {
+  background: #1d4ed8;
+}
+
+
+/* Hero */
+
+.home-hero {
+  min-height: 520px;
+  padding: 70px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  background:
+          linear-gradient(
+                  135deg,
+                  #eff6ff 0%,
+                  #ffffff 55%,
+                  #f0fdf4 100%
+          );
+}
+
+.hero-content {
+  max-width: 650px;
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-size: 52px;
+  line-height: 1.12;
+  color: #111827;
+}
+
+.hero-content h1 span {
+  color: #2563eb;
+}
+
+.hero-content p {
+  max-width: 600px;
+  margin: 25px 0;
+  color: #6b7280;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.hero-login-button {
+  padding: 14px 26px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hero-login-button:hover {
+  background: #1d4ed8;
+}
+
+
+/* Hero information card */
+
+.hero-card {
+  width: 350px;
+  padding: 35px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e5e7eb;
+}
+
+.hero-card-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #dbeafe;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.hero-card h3 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.hero-card p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 35px;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.hero-stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-stats strong {
+  font-size: 23px;
+  color: #2563eb;
+}
+
+.hero-stats span {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+
+/* Services */
+
+.home-services {
+  padding: 80px 7%;
+  background: white;
+}
+
+.section-heading {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 45px;
+}
+
+.section-heading span,
+.section-label {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.section-heading h2 {
+  margin: 10px 0;
+  font-size: 32px;
+}
+
+.section-heading p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.service-grid {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.service-card {
+  padding: 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  transition: 0.2s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.service-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #eff6ff;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.service-card h3 {
+  margin-bottom: 10px;
+}
+
+.service-card p {
+  color: #6b7280;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+
+/* About */
+
+.home-about {
+  padding: 75px 7%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  background: #f8fafc;
+}
+
+.home-about h2 {
+  max-width: 500px;
+  margin-top: 12px;
+  font-size: 34px;
+  line-height: 1.25;
+}
+
+.home-about p {
+  color: #6b7280;
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+
+/* Footer */
+
+.home-footer {
+  padding: 30px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  color: white;
+}
+
+.home-footer div {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-footer strong {
+  font-size: 20px;
+}
+
+.home-footer span {
+  margin-top: 3px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.home-footer p {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+  .home-hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px 6%;
+  }
+
+  .hero-content {
+    max-width: 700px;
+  }
+
+  .hero-card {
+    width: auto;
+    max-width: 400px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+
+  .home-about {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .home-navbar {
+    padding: 0 20px;
+  }
+
+  .home-hero {
+    padding: 45px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 38px;
+  }
+
+  .hero-content p {
+    font-size: 15px;
+  }
+
+  .hero-card {
+    padding: 25px;
+  }
+
+  .home-services {
+    padding: 60px 20px;
+  }
+
+  .home-about {
+    padding: 60px 20px;
+  }
+
+  .home-footer {
+    padding: 25px 20px;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+}
+
+     /* =========================================
+        CAREHUB LOGIN PAGE
+     ========================================= */
+
+   .login-page {
+     min-height: 100vh;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     padding: 30px 20px;
+
+     background:
+             linear-gradient(
+                     135deg,
+                     #eff6ff 0%,
+                     #ffffff 50%,
+                     #f0fdf4 100%
+             );
+   }
+
+
+/* Login Card */
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  padding: 40px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  box-shadow:
+          0 20px 50px rgba(15, 23, 42, 0.10);
+}
+
+
+/* Back button */
+
+.back-home-button {
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 25px;
+}
+
+.back-home-button:hover {
+  color: #2563eb;
+}
+
+
+/* Header */
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo {
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 15px;
+
+  border-radius: 16px;
+  background: #dbeafe;
+
+  font-size: 30px;
+}
+
+.login-header h1 {
+  margin: 0;
+  color: #2563eb;
+  font-size: 30px;
+}
+
+.login-header p {
+  margin-top: 5px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+/* Welcome */
+
+.login-welcome {
+  margin-bottom: 25px;
+}
+
+.login-welcome h2 {
+  margin-bottom: 7px;
+  font-size: 22px;
+  color: #111827;
+}
+
+.login-welcome p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* Inputs */
+
+.login-card .form-group {
+  margin-bottom: 20px;
+}
+
+.login-card .form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-card .form-group input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 13px 14px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.login-card .form-group input:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+          0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* Login button */
+
+.login-card .login-button {
+  width: 100%;
+  padding: 13px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #2563eb;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.login-card .login-button:hover {
+  background: #1d4ed8;
+}
+
+
+/* Error */
+
+.login-card .error-message {
+  margin: 0 0 15px;
+  padding: 10px 12px;
+
+  border-radius: 7px;
+
+  background: #fef2f2;
+  color: #dc2626;
+
+  font-size: 13px;
+}
+
+
+/* Footer */
+
+.login-footer {
+  margin-top: 25px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e5e7eb;
+
+  text-align: center;
+
+  color: #6b7280;
+  font-size: 12px;
+}
+
+
+

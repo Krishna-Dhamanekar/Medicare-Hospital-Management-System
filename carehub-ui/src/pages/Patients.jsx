@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 import axios from "axios"
 
@@ -7,6 +8,7 @@ function Patients() {
     const [search, setSearch] = useState("")
     const [showForm, setShowForm] = useState(false)
     const [editingId, setEditingId] = useState(null)
+
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
 
@@ -18,7 +20,6 @@ function Patients() {
     })
 
     const loadPatients = async () => {
-
         try {
             const token = localStorage.getItem("token")
 
@@ -32,7 +33,6 @@ function Patients() {
             )
 
             setPatients(response.data.content)
-
         } catch {
             setError("Unable to load patients")
         }
@@ -83,8 +83,21 @@ function Patients() {
         setShowForm(true)
     }
 
-    const handleSubmit = async (event) => {
+    const closeForm = () => {
+        setShowForm(false)
+        setEditingId(null)
 
+        setForm({
+            name: "",
+            email: "",
+            phone: "",
+            age: ""
+        })
+
+        setError("")
+    }
+
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         try {
@@ -107,289 +120,315 @@ function Patients() {
 
                 await axios.put(
                     `http://localhost:8082/patients/${editingId}`,
-                    patientData,
-                    config
-                )
+    patientData,
+        config
+)
 
-                setSuccess("Patient updated successfully")
+setSuccess("Patient updated successfully")
 
-            } else {
+} else {
 
-                await axios.post(
-                    "http://localhost:8082/patients",
-                    patientData,
-                    config
-                )
+    await axios.post(
+        "http://localhost:8082/patients",
+        patientData,
+        config
+    )
 
-                setSuccess("Patient added successfully")
-            }
+    setSuccess("Patient added successfully")
+}
 
-            setForm({
-                name: "",
-                email: "",
-                phone: "",
-                age: ""
-            })
+setForm({
+    name: "",
+    email: "",
+    phone: "",
+    age: ""
+})
 
-            setEditingId(null)
-            setShowForm(false)
+setEditingId(null)
+setShowForm(false)
 
-            await loadPatients()
+await loadPatients()
 
-        } catch (error) {
+} catch (error) {
 
-            if (error.response?.data?.message) {
-                setError(error.response.data.message)
-            } else {
-                setError("Unable to save patient")
-            }
-        }
+    if (error.response?.data?.message) {
+        setError(error.response.data.message)
+    } else {
+        setError("Unable to save patient")
+    }
+}
+}
+
+const handleDelete = async (id) => {
+
+    const confirmed = window.confirm(
+        "Are you sure you want to delete this patient?"
+    )
+
+    if (!confirmed) {
+        return
     }
 
-    const handleDelete = async (id) => {
+    try {
 
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this patient?"
+        const token = localStorage.getItem("token")
+
+        await axios.delete(
+            `http://localhost:8082/patients/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         )
 
-        if (!confirmed) {
-            return
-        }
+        setSuccess("Patient deleted successfully")
+        setError("")
 
-        try {
-            const token = localStorage.getItem("token")
+        await loadPatients()
 
-            await axios.delete(
-                `http://localhost:8082/patients/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            )
+    } catch (error) {
 
-            setSuccess("Patient deleted successfully")
-            setError("")
-
-            await loadPatients()
-
-        } catch {
+        if (error.response?.data?.message) {
+            setError(error.response.data.message)
+        } else {
             setError("Unable to delete patient")
         }
     }
+}
 
-    const filteredPatients = patients.filter((patient) =>
-        patient.name.toLowerCase().includes(search.toLowerCase())
-    )
+const filteredPatients = patients.filter((patient) =>
+    patient.name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+)
 
-    return (
-        <div className="patients-page">
+return (
+    <div className="patients-page">
 
-            <div className="patients-header">
+        <div className="patients-header">
 
-                <div>
-                    <h1>Patients</h1>
-                    <p>Manage hospital patients</p>
-                </div>
+            <div>
+                <h1>Patients</h1>
 
-                <button
-                    className="add-patient-button"
-                    onClick={openAddForm}
-                >
-                    + Add Patient
-                </button>
-
-            </div>
-
-            {error && (
-                <p className="error-message">
-                    {error}
+                <p>
+                    Manage registered patients
                 </p>
-            )}
-
-            {success && (
-                <p className="success-message">
-                    {success}
-                </p>
-            )}
-
-            <div className="patients-toolbar">
-
-                <input
-                    type="text"
-                    placeholder="Search patients by name..."
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                />
-
             </div>
 
-            {showForm && (
-                <div className="patient-form-card">
-
-                    <h2>
-                        {editingId ? "Edit Patient" : "Add Patient"}
-                    </h2>
-
-                    <form onSubmit={handleSubmit}>
-
-                        <div className="patient-form-grid">
-
-                            <div className="form-group">
-                                <label>Name</label>
-
-                                <input
-                                    type="text"
-                                    name="name"
-                                    placeholder="Enter patient name"
-                                    value={form.name}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Email</label>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter email"
-                                    value={form.email}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Phone</label>
-
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    placeholder="Enter phone number"
-                                    value={form.phone}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Age</label>
-
-                                <input
-                                    type="number"
-                                    name="age"
-                                    placeholder="Enter age"
-                                    value={form.age}
-                                    onChange={handleChange}
-                                    min="1"
-                                    required
-                                />
-                            </div>
-
-                        </div>
-
-                        <div className="patient-form-actions">
-
-                            <button
-                                type="submit"
-                                className="save-button"
-                            >
-                                {editingId ? "Update Patient" : "Save Patient"}
-                            </button>
-
-                            <button
-                                type="button"
-                                className="cancel-button"
-                                onClick={() => setShowForm(false)}
-                            >
-                                Cancel
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-            )}
-
-            <div className="patients-table">
-
-                <table>
-
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Age</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-
-                    {filteredPatients.length === 0 ? (
-
-                        <tr>
-                            <td colSpan="6">
-                                No patients found
-                            </td>
-                        </tr>
-
-                    ) : (
-
-                        filteredPatients.map((patient) => (
-
-                            <tr key={patient.id}>
-
-                                <td>{patient.id}</td>
-
-                                <td>{patient.name}</td>
-
-                                <td>{patient.email}</td>
-
-                                <td>{patient.phone}</td>
-
-                                <td>{patient.age}</td>
-
-                                <td>
-
-                                    <button
-                                        className="edit-button"
-                                        onClick={() =>
-                                            openEditForm(patient)
-                                        }
-                                    >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        className="delete-button"
-                                        onClick={() =>
-                                            handleDelete(patient.id)
-                                        }
-                                    >
-                                        Delete
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-                        ))
-                    )}
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            <button
+                className="add-patient-button"
+                onClick={openAddForm}
+            >
+                + Add Patient
+            </button>
 
         </div>
-    )
+
+        {error && (
+            <p className="error-message">
+                {error}
+            </p>
+        )}
+
+        {success && (
+            <p className="success-message">
+                {success}
+            </p>
+        )}
+
+        <div className="patients-toolbar">
+
+            <input
+                type="text"
+                placeholder="Search patients by name..."
+                value={search}
+                onChange={(event) =>
+                    setSearch(event.target.value)
+                }
+            />
+
+        </div>
+
+        {showForm && (
+
+            <div className="patient-form-card">
+
+                <h2>
+                    {editingId
+                        ? "Edit Patient"
+                        : "Add New Patient"}
+                </h2>
+
+                <form onSubmit={handleSubmit}>
+
+                    <div className="patient-form-grid">
+
+                        <div className="form-group">
+
+                            <label>Name</label>
+
+                            <input
+                                type="text"
+                                name="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Email</label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Phone</label>
+
+                            <input
+                                type="text"
+                                name="phone"
+                                value={form.phone}
+                                onChange={handleChange}
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Age</label>
+
+                            <input
+                                type="number"
+                                name="age"
+                                value={form.age}
+                                onChange={handleChange}
+                                min="1"
+                                required
+                            />
+
+                        </div>
+
+                    </div>
+
+                    <div className="patient-form-actions">
+
+                        <button
+                            type="submit"
+                            className="save-button"
+                        >
+                            {editingId
+                                ? "Update Patient"
+                                : "Save Patient"}
+                        </button>
+
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={closeForm}
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        )}
+
+        <div className="patients-table">
+
+            <table>
+
+                <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Age</th>
+                    <th>Actions</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                {filteredPatients.length === 0 ? (
+
+                    <tr>
+                        <td colSpan="6">
+                            No patients found
+                        </td>
+                    </tr>
+
+                ) : (
+
+                    filteredPatients.map((patient) => (
+
+                        <tr key={patient.id}>
+
+                            <td>{patient.id}</td>
+
+                            <td>{patient.name}</td>
+
+                            <td>{patient.email}</td>
+
+                            <td>{patient.phone}</td>
+
+                            <td>{patient.age}</td>
+
+                            <td>
+
+                                <button
+                                    className="edit-button"
+                                    onClick={() =>
+                                        openEditForm(patient)
+                                    }
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    className="delete-button"
+                                    onClick={() =>
+                                        handleDelete(patient.id)
+                                    }
+                                >
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                    ))
+                )}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+)
 }
 
 export default Patients
+

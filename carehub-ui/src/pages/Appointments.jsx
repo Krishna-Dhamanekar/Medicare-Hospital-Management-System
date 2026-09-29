@@ -26,6 +26,7 @@ function Appointments() {
     const loadAppointments = async () => {
 
         try {
+
             const token = localStorage.getItem("token")
 
             const response = await axios.get(
@@ -40,6 +41,7 @@ function Appointments() {
             setAppointments(response.data)
 
         } catch {
+
             setError("Unable to load appointments")
         }
     }
@@ -47,6 +49,7 @@ function Appointments() {
     const loadPatients = async () => {
 
         try {
+
             const token = localStorage.getItem("token")
 
             const response = await axios.get(
@@ -61,6 +64,7 @@ function Appointments() {
             setPatients(response.data.content)
 
         } catch {
+
             setError("Unable to load patients")
         }
     }
@@ -68,6 +72,7 @@ function Appointments() {
     const loadDoctors = async () => {
 
         try {
+
             const token = localStorage.getItem("token")
 
             const response = await axios.get(
@@ -82,6 +87,7 @@ function Appointments() {
             setDoctors(response.data)
 
         } catch {
+
             setError("Unable to load doctors")
         }
     }
@@ -89,9 +95,11 @@ function Appointments() {
     useEffect(() => {
 
         const load = async () => {
+
             await loadAppointments()
             await loadPatients()
             await loadDoctors()
+
         }
 
         load()
@@ -140,6 +148,22 @@ function Appointments() {
         setShowForm(true)
     }
 
+    const closeForm = () => {
+
+        setShowForm(false)
+        setEditingId(null)
+
+        setForm({
+            appointmentDate: "",
+            appointmentTime: "",
+            reason: "",
+            patientId: "",
+            doctorId: ""
+        })
+
+        setError("")
+    }
+
     const handleSubmit = async (event) => {
 
         event.preventDefault()
@@ -166,321 +190,373 @@ function Appointments() {
 
                 await axios.put(
                     `http://localhost:8082/appointments/${editingId}`,
-                    appointmentData,
-                    config
-                )
+    appointmentData,
+        config
+)
 
-                setSuccess("Appointment updated successfully")
+setSuccess("Appointment updated successfully")
 
-            } else {
+} else {
 
-                await axios.post(
-                    "http://localhost:8082/appointments",
-                    appointmentData,
-                    config
-                )
+    await axios.post(
+        "http://localhost:8082/appointments",
+        appointmentData,
+        config
+    )
 
-                setSuccess("Appointment created successfully")
-            }
+    setSuccess("Appointment created successfully")
+}
 
-            setForm({
-                appointmentDate: "",
-                appointmentTime: "",
-                reason: "",
-                patientId: "",
-                doctorId: ""
-            })
+setForm({
+    appointmentDate: "",
+    appointmentTime: "",
+    reason: "",
+    patientId: "",
+    doctorId: ""
+})
 
-            setEditingId(null)
-            setShowForm(false)
+setEditingId(null)
+setShowForm(false)
 
-            await loadAppointments()
+await loadAppointments()
 
-        } catch (error) {
+} catch (error) {
 
-            if (error.response?.data?.message) {
-                setError(error.response.data.message)
-            } else {
-                setError("Unable to save appointment")
-            }
-        }
+    if (error.response?.data?.message) {
+        setError(error.response.data.message)
+    } else {
+        setError("Unable to save appointment")
+    }
+}
+}
+
+const handleDelete = async (id) => {
+
+    const confirmed = window.confirm(
+        "Are you sure you want to delete this appointment?"
+    )
+
+    if (!confirmed) {
+        return
     }
 
-    const handleDelete = async (id) => {
+    try {
 
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this appointment?"
-        )
+        const token = localStorage.getItem("token")
 
-        if (!confirmed) {
-            return
-        }
-
-        try {
-
-            const token = localStorage.getItem("token")
-
-            await axios.delete(
-                `http://localhost:8082/appointments/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+        await axios.delete(
+            `http://localhost:8082/appointments/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            )
-
-            setSuccess("Appointment deleted successfully")
-            setError("")
-
-            await loadAppointments()
-
-        } catch (error) {
-
-            if (error.response?.data?.message) {
-                setError(error.response.data.message)
-            } else {
-                setError("Unable to delete appointment")
             }
+        )
+
+        setSuccess("Appointment deleted successfully")
+        setError("")
+
+        await loadAppointments()
+
+    } catch (error) {
+
+        if (error.response?.data?.message) {
+            setError(error.response.data.message)
+        } else {
+            setError("Unable to delete appointment")
         }
     }
+}
 
-    const getPatientName = (patientId) => {
+const getPatientName = (patientId) => {
 
-        const patient = patients.find(
-            (patient) => patient.id === patientId
-        )
+    const patient = patients.find(
+        (patient) => patient.id === patientId
+    )
 
-        return patient ? patient.name : `Patient #${patientId}`
-    }
+    return patient
+        ? patient.name
+        : `Patient #${patientId}`
+}
 
-    const getDoctorName = (doctorId) => {
+const getDoctorName = (doctorId) => {
 
-        const doctor = doctors.find(
-            (doctor) => doctor.id === doctorId
-        )
+    const doctor = doctors.find(
+        (doctor) => doctor.id === doctorId
+    )
 
-        return doctor ? doctor.name : `Doctor #${doctorId}`
-    }
+    return doctor
+        ? doctor.name
+        : `Doctor #${doctorId}`
+}
 
-    const filteredAppointments = appointments.filter((appointment) => {
+const filteredAppointments = appointments.filter(
+    (appointment) => {
 
         const patientName =
-            getPatientName(appointment.patientId).toLowerCase()
+            getPatientName(
+                appointment.patientId
+            ).toLowerCase()
 
         const doctorName =
-            getDoctorName(appointment.doctorId).toLowerCase()
+            getDoctorName(
+                appointment.doctorId
+            ).toLowerCase()
 
-        const searchText = search.toLowerCase()
+        const reason =
+            appointment.reason.toLowerCase()
+
+        const searchText =
+            search.toLowerCase()
 
         return (
             patientName.includes(searchText) ||
             doctorName.includes(searchText) ||
-            appointment.reason.toLowerCase().includes(searchText)
+            reason.includes(searchText)
         )
-    })
+    }
+)
 
-    return (
-        <div className="appointments-page">
+return (
+    <div className="appointments-page">
 
-            <div className="appointments-header">
+        <div className="appointments-header">
 
-                <div>
-                    <h1>Appointments</h1>
-                    <p>Manage hospital appointments</p>
-                </div>
+            <div>
 
-                <button
-                    className="add-appointment-button"
-                    onClick={openAddForm}
-                >
-                    + Add Appointment
-                </button>
+                <h1>Appointments</h1>
+
+                <p>
+                    Manage patient appointments
+                </p>
 
             </div>
 
-            {error && (
-                <p className="error-message">
-                    {error}
-                </p>
-            )}
+            <button
+                className="add-appointment-button"
+                onClick={openAddForm}
+            >
+                + Add Appointment
+            </button>
 
-            {success && (
-                <p className="success-message">
-                    {success}
-                </p>
-            )}
+        </div>
 
-            <div className="appointments-toolbar">
+        {error && (
+            <p className="error-message">
+                {error}
+            </p>
+        )}
 
-                <input
-                    type="text"
-                    placeholder="Search by patient, doctor or reason..."
-                    value={search}
-                    onChange={(event) =>
-                        setSearch(event.target.value)
-                    }
-                />
+        {success && (
+            <p className="success-message">
+                {success}
+            </p>
+        )}
+
+        <div className="appointments-toolbar">
+
+            <input
+                type="text"
+                placeholder="Search by patient, doctor or reason..."
+                value={search}
+                onChange={(event) =>
+                    setSearch(event.target.value)
+                }
+            />
+
+        </div>
+
+        {showForm && (
+
+            <div className="appointment-form-card">
+
+                <h2>
+                    {editingId
+                        ? "Edit Appointment"
+                        : "Create Appointment"}
+                </h2>
+
+                <form onSubmit={handleSubmit}>
+
+                    <div className="appointment-form-grid">
+
+                        <div className="form-group">
+
+                            <label>Date</label>
+
+                            <input
+                                type="date"
+                                name="appointmentDate"
+                                value={form.appointmentDate}
+                                onChange={handleChange}
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Time</label>
+
+                            <input
+                                type="time"
+                                name="appointmentTime"
+                                value={form.appointmentTime}
+                                onChange={handleChange}
+                                required
+                            />
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Patient</label>
+
+                            <select
+                                name="patientId"
+                                value={form.patientId}
+                                onChange={handleChange}
+                                required
+                            >
+
+                                <option value="">
+                                    Select Patient
+                                </option>
+
+                                {patients.map((patient) => (
+
+                                    <option
+                                        key={patient.id}
+                                        value={patient.id}
+                                    >
+                                        {patient.name}
+                                    </option>
+
+                                ))}
+
+                            </select>
+
+                        </div>
+
+                        <div className="form-group">
+
+                            <label>Doctor</label>
+
+                            <select
+                                name="doctorId"
+                                value={form.doctorId}
+                                onChange={handleChange}
+                                required
+                            >
+
+                                <option value="">
+                                    Select Doctor
+                                </option>
+
+                                {doctors.map((doctor) => (
+
+                                    <option
+                                        key={doctor.id}
+                                        value={doctor.id}
+                                    >
+                                        {doctor.name} - {doctor.specialization}
+                                    </option>
+
+                                ))}
+
+                            </select>
+
+                        </div>
+
+                        <div className="form-group appointment-reason">
+
+                            <label>Reason</label>
+
+                            <textarea
+                                name="reason"
+                                value={form.reason}
+                                onChange={handleChange}
+                                placeholder="Enter appointment reason..."
+                                required
+                            />
+
+                        </div>
+
+                    </div>
+
+                    <div className="appointment-form-actions">
+
+                        <button
+                            type="submit"
+                            className="save-button"
+                        >
+                            {editingId
+                                ? "Update Appointment"
+                                : "Create Appointment"}
+                        </button>
+
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={closeForm}
+                        >
+                            Cancel
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
-            {showForm && (
-                <div className="appointment-form-card">
+        )}
 
-                    <h2>
-                        {editingId
-                            ? "Edit Appointment"
-                            : "Add Appointment"}
-                    </h2>
+        <div className="appointments-table">
 
-                    <form onSubmit={handleSubmit}>
+            <table>
 
-                        <div className="appointment-form-grid">
+                <thead>
 
-                            <div className="form-group">
-                                <label>Patient</label>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Reason</th>
+                    <th>Actions</th>
+                </tr>
 
-                                <select
-                                    name="patientId"
-                                    value={form.patientId}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">
-                                        Select patient
-                                    </option>
+                </thead>
 
-                                    {patients.map((patient) => (
-                                        <option
-                                            key={patient.id}
-                                            value={patient.id}
-                                        >
-                                            {patient.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                <tbody>
 
-                            <div className="form-group">
-                                <label>Doctor</label>
+                {filteredAppointments.length === 0 ? (
 
-                                <select
-                                    name="doctorId"
-                                    value={form.doctorId}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">
-                                        Select doctor
-                                    </option>
-
-                                    {doctors.map((doctor) => (
-                                        <option
-                                            key={doctor.id}
-                                            value={doctor.id}
-                                        >
-                                            {doctor.name} - {doctor.specialization}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="form-group">
-                                <label>Date</label>
-
-                                <input
-                                    type="date"
-                                    name="appointmentDate"
-                                    value={form.appointmentDate}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label>Time</label>
-
-                                <input
-                                    type="time"
-                                    name="appointmentTime"
-                                    value={form.appointmentTime}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group appointment-reason">
-                                <label>Reason</label>
-
-                                <textarea
-                                    name="reason"
-                                    placeholder="Enter appointment reason"
-                                    value={form.reason}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                        </div>
-
-                        <div className="appointment-form-actions">
-
-                            <button
-                                type="submit"
-                                className="save-button"
-                            >
-                                {editingId
-                                    ? "Update Appointment"
-                                    : "Save Appointment"}
-                            </button>
-
-                            <button
-                                type="button"
-                                className="cancel-button"
-                                onClick={() => setShowForm(false)}
-                            >
-                                Cancel
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-            )}
-
-            <div className="appointments-table">
-
-                <table>
-
-                    <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Patient</th>
-                        <th>Doctor</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Reason</th>
-                        <th>Actions</th>
+                        <td colSpan="7">
+                            No appointments found
+                        </td>
                     </tr>
-                    </thead>
 
-                    <tbody>
+                ) : (
 
-                    {filteredAppointments.length === 0 ? (
-
-                        <tr>
-                            <td colSpan="7">
-                                No appointments found
-                            </td>
-                        </tr>
-
-                    ) : (
-
-                        filteredAppointments.map((appointment) => (
+                    filteredAppointments.map(
+                        (appointment) => (
 
                             <tr key={appointment.id}>
 
-                                <td>{appointment.id}</td>
+                                <td>
+                                    {appointment.id}
+                                </td>
+
+                                <td>
+                                    {appointment.appointmentDate}
+                                </td>
+
+                                <td>
+                                    {appointment.appointmentTime}
+                                </td>
 
                                 <td>
                                     {getPatientName(
@@ -495,14 +571,6 @@ function Appointments() {
                                 </td>
 
                                 <td>
-                                    {appointment.appointmentDate}
-                                </td>
-
-                                <td>
-                                    {appointment.appointmentTime}
-                                </td>
-
-                                <td>
                                     {appointment.reason}
                                 </td>
 
@@ -511,7 +579,9 @@ function Appointments() {
                                     <button
                                         className="edit-button"
                                         onClick={() =>
-                                            openEditForm(appointment)
+                                            openEditForm(
+                                                appointment
+                                            )
                                         }
                                     >
                                         Edit
@@ -532,17 +602,19 @@ function Appointments() {
 
                             </tr>
 
-                        ))
-                    )}
+                        )
+                    )
+                )}
 
-                    </tbody>
+                </tbody>
 
-                </table>
-
-            </div>
+            </table>
 
         </div>
-    )
+
+    </div>
+)
 }
 
 export default Appointments
+
