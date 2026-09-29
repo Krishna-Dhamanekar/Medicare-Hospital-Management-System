@@ -17,13 +17,13 @@ public class AdminDataInitializer {
 
         return args -> {
 
-            if (adminRepository.findByUsername("admin").isEmpty()) {
+            if (adminRepository.findByUsername("CareHub").isEmpty()) {
 
                 Admin admin = new Admin();
 
-                admin.setUsername("admin");
+                admin.setUsername("CareHub");
                 admin.setPassword(
-                        passwordEncoder.encode("admin123")
+                        passwordEncoder.encode("CareHub@2026")
                 );
 
                 adminRepository.save(admin);
