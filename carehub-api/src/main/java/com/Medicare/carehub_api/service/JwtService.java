@@ -3,6 +3,7 @@ package com.Medicare.carehub_api.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,16 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY =
-            "CareHubSecretKeyForJwtAuthentication2026Secure";
-
-    private final SecretKey key =
-            Keys.hmacShaKeyFor(
-                    SECRET_KEY.getBytes(StandardCharsets.UTF_8)
-            );
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     private final long expirationTime = 1000 * 60 * 60;
+
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(
+                secretKey.getBytes(StandardCharsets.UTF_8)
+        );
+    }
 
     public String generateToken(String username) {
 
@@ -35,7 +37,7 @@ public class JwtService {
                                         + expirationTime
                         )
                 )
-                .signWith(key)
+                .signWith(getKey())
                 .compact();
     }
 
@@ -66,7 +68,7 @@ public class JwtService {
             Function<Claims, T> claimsResolver) {
 
         Claims claims = Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(getKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
